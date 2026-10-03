@@ -3,6 +3,7 @@ import { shuffle } from './utils/shuffle.js';
 import { createCard } from './components/card.js';
 
 let firstCard = null;
+let timerId = null;
 let isLocked = false;
 let moves = 0;
 let pairsFound = 0;
@@ -11,6 +12,24 @@ const TOTAL_PAIRS = CARD_NAMES.length;
 
 const movesText = document.createElement('p');
 const pairsText = document.createElement('p');
+
+const board = document.createElement('div');
+board.className = 'board';
+
+export function startGame() {
+  clearTimeout(timerId);
+
+  firstCard = null;
+  isLocked = false;
+  moves = 0;
+  pairsFound = 0;
+
+  const deck = shuffle([...CARD_NAMES, ...CARD_NAMES]);
+  const cards = deck.map((name) => createCard(name, handleCardClick));
+  board.replaceChildren(...cards);
+
+  updateStats();
+}
 
 function updateStats() {
   movesText.textContent = `Moves: ${moves}`;
@@ -37,7 +56,7 @@ function handleCardClick(card) {
     pairsFound += 1;
   } else {
     isLocked = true;
-    setTimeout(() => {
+    timerId = setTimeout(() => {
       previousCard.classList.remove('card--open');
       card.classList.remove('card--open');
       isLocked = false;
@@ -52,17 +71,7 @@ export function createGame() {
   stats.className = 'stats';
   stats.append(movesText, pairsText);
 
-  const board = document.createElement('div');
-  board.className = 'board';
-
-  const deck = shuffle([...CARD_NAMES, ...CARD_NAMES]);
-
-  deck.forEach((name) => {
-    const card = createCard(name, handleCardClick);
-    board.append(card);
-  });
-
-  updateStats();
+  startGame();
 
   const game = document.createElement('main');
   game.append(stats, board);
