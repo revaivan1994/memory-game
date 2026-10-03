@@ -1,0 +1,1 @@
+export const CARD_NAMES = ['octopus', 'crab', 'dolphin', 'fish', 'shell', 'squid', 'turtle', 'whale'];
