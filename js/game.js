@@ -4,6 +4,18 @@ import { createCard } from './components/card.js';
 
 let firstCard = null;
 let isLocked = false;
+let moves = 0;
+let pairsFound = 0;
+
+const TOTAL_PAIRS = CARD_NAMES.length;
+
+const movesText = document.createElement('p');
+const pairsText = document.createElement('p');
+
+function updateStats() {
+  movesText.textContent = `Moves: ${moves}`;
+  pairsText.textContent = `Pairs: ${pairsFound} of ${TOTAL_PAIRS}`;
+}
 
 function handleCardClick(card) {
   if (card.classList.contains('card--open') || isLocked) {
@@ -17,10 +29,12 @@ function handleCardClick(card) {
   }
   const previousCard = firstCard;
   firstCard = null;
+  moves += 1;
 
   if (previousCard.dataset.name === card.dataset.name) {
     previousCard.classList.add('card--matched');
     card.classList.add('card--matched');
+    pairsFound += 1;
   } else {
     isLocked = true;
     setTimeout(() => {
@@ -29,9 +43,15 @@ function handleCardClick(card) {
       isLocked = false;
     }, 1000);
   }
+
+  updateStats();
 }
 
-export function createBoard() {
+export function createGame() {
+  const stats = document.createElement('div');
+  stats.className = 'stats';
+  stats.append(movesText, pairsText);
+
   const board = document.createElement('div');
   board.className = 'board';
 
@@ -42,5 +62,10 @@ export function createBoard() {
     board.append(card);
   });
 
-  return board;
+  updateStats();
+
+  const game = document.createElement('main');
+  game.append(stats, board);
+
+  return game;
 }
