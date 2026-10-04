@@ -3,5 +3,6 @@ export function createButton(text, onClick) {
   button.textContent = text;
   button.setAttribute('type', 'button');
   button.addEventListener('click', onClick);
+  button.className = 'button';
   return button;
 }

@@ -65,9 +65,11 @@ function handleCardClick(card) {
     }
   } else {
     isLocked = true;
+    card.classList.add('card--wrong');
+    previousCard.classList.add('card--wrong');
     timerId = setTimeout(() => {
-      previousCard.classList.remove('card--open');
-      card.classList.remove('card--open');
+      previousCard.classList.remove('card--open', 'card--wrong');
+      card.classList.remove('card--open', 'card--wrong');
       isLocked = false;
     }, 1000);
   }

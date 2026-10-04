@@ -1,19 +1,331 @@
-.card img {
-  visibility: hidden;
+/* =========================================
+   Sea Memory — styles
+   ========================================= */
+
+:root {
+  --ocean-top: #0b2d4a;
+  --ocean-bottom: #0f6b78;
+  --card-back: #0a4f63;
+  --card-back-line: #1d8a9b;
+  --gold: #ffcb57;
+  --coral: #ff6f61;
+  --foam: #eafbfb;
+  --text: #f4fbfd;
+  --ink: #12304a;
+  --radius: 16px;
 }
 
-.card--open img {
-  visibility: visible;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.modal {
-  padding: 0;
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--ocean-top), var(--ocean-bottom));
+  background-attachment: fixed;
 }
 
-.modal__content {
-  padding: 24px;
+/* Пузырьки: псевдоэлемент на весь экран, без лишней разметки */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 0.18) 2px, transparent 3px),
+    radial-gradient(circle, rgb(255 255 255 / 0.12) 4px, transparent 5px),
+    radial-gradient(circle, rgb(255 255 255 / 0.08) 7px, transparent 8px);
+  background-size: 90px 90px, 160px 160px, 260px 260px;
+  background-position: 10px 0, 60px 40px, 130px 90px;
+  animation: bubbles 18s linear infinite;
+}
+
+@keyframes bubbles {
+  to {
+    background-position: 10px -900px, 60px -1240px, 130px -1690px;
+  }
 }
 
 body.is-scroll-locked {
   overflow: hidden;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 16px 0;
+}
+
+.header h1 {
+  flex-basis: 100%;
+  margin: 0 0 4px;
+  font-size: clamp(2.25rem, 8vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, var(--gold), var(--coral));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Buttons ---------- */
+.button {
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #c99520;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #c99520;
+}
+
+.button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #c99520;
+}
+
+.button:focus-visible,
+.card:focus-visible {
+  outline: 3px solid var(--foam);
+  outline-offset: 3px;
+}
+
+/* ---------- Stats ---------- */
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stats p {
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Board ---------- */
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ---------- Card: 3D-переворот ---------- */
+.card {
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+  perspective: 700px; /* «глубина» сцены для 3D */
+}
+
+.card--open {
+  cursor: default;
+}
+
+.card__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transform-style: preserve-3d; /* дети живут в 3D */
+  transition: transform 0.45s cubic-bezier(0.3, 1.4, 0.6, 1);
+}
+
+.card--open .card__inner {
+  transform: rotateY(180deg);
+}
+
+.card__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  backface-visibility: hidden; /* обратная сторона не видна */
+}
+
+/* Рубашка: чешуя из повторяющегося градиента */
+.card__face--back {
+  background-color: var(--card-back);
+  background-image: radial-gradient(circle at 50% 120%, transparent 40%, var(--card-back-line) 41% 48%, transparent 49%);
+  background-size: 24px 16px;
+  box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.15), 0 6px 14px rgb(0 0 0 / 0.25);
+  transition: transform 0.2s;
+}
+
+.card:not(.card--open):hover .card__face--back {
+  transform: translateY(-3px);
+}
+
+.card__face--front {
+  background: var(--foam);
+  transform: rotateY(180deg); /* лицо заранее «спиной» к нам */
+  box-shadow: 0 6px 14px rgb(0 0 0 / 0.25);
+}
+
+.card__face--front img {
+  width: 68%;
+  height: 68%;
+}
+
+/* Найденная пара: золотая рамка и «прыжок» */
+.card--matched .card__face--front {
+  box-shadow: inset 0 0 0 4px var(--gold), 0 0 22px rgb(255 203 87 / 0.55);
+}
+
+.card--matched {
+  animation: pop 0.45s ease 0.3s;
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Несовпавшая пара: красная рамка и тряска */
+.card--wrong .card__face--front {
+  box-shadow: inset 0 0 0 4px var(--coral);
+}
+
+.card--wrong {
+  animation: shake 0.4s ease 0.35s;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-6px) rotate(-3deg); }
+  75% { transform: translateX(6px) rotate(3deg); }
+}
+
+/* ---------- Modal ---------- */
+.modal {
+  width: min(400px, calc(100% - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: var(--foam);
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.4);
+}
+
+.modal[open] {
+  animation: modal-in 0.3s cubic-bezier(0.3, 1.4, 0.6, 1);
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
+
+.modal::backdrop {
+  background: rgb(5 25 40 / 0.65);
+  backdrop-filter: blur(3px);
+}
+
+/* Кнопки встают в ряд, всё остальное — на всю ширину */
+.modal__content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 28px 24px 24px;
+}
+
+.modal__content > :not(.button) {
+  flex-basis: 100%;
+}
+
+.modal__content .button {
+  flex: 1;
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--card-back);
+}
+
+.modal p {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+}
+
+/* ---------- Leaderboard ---------- */
+.leaderboard {
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.leaderboard th {
+  font-weight: 500;
+  color: var(--card-back);
+  border-bottom: 2px solid var(--card-back-line);
+}
+
+.leaderboard tbody tr:nth-child(odd) {
+  background: rgb(15 107 120 / 0.08);
+}
+
+.leaderboard tbody tr:first-child td {
+  font-weight: 600;
+}
+
+/* ---------- Мобильные ---------- */
+@media (max-width: 420px) {
+  .board {
+    gap: 8px;
+  }
+
+  .button {
+    padding: 9px 16px;
+  }
+}
+
+/* Уважение к настройке «уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before {
+    animation: none !important;
+    transition: none !important;
+  }
 }
