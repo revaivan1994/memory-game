@@ -5,3 +5,15 @@
 .card--open img {
   visibility: visible;
 }
+
+.modal {
+  padding: 0;
+}
+
+.modal__content {
+  padding: 24px;
+}
+
+body.is-scroll-locked {
+  overflow: hidden;
+}
