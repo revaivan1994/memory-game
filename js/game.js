@@ -1,6 +1,7 @@
 import { CARD_NAMES } from './data/cards.js';
 import { shuffle } from './utils/shuffle.js';
 import { createCard } from './components/card.js';
+import { addResult } from './storage/leaderboard.js';
 
 let firstCard = null;
 let timerId = null;
@@ -59,6 +60,7 @@ function handleCardClick(card) {
     pairsFound += 1;
     if (pairsFound === TOTAL_PAIRS) {
       isFinished = true;
+      addResult(moves);
       onWin(moves);
     }
   } else {

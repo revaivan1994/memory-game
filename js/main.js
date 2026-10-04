@@ -2,19 +2,27 @@ import { createHeader } from './components/header.js';
 import { createModal } from './components/modal.js';
 import { createGame, startGame } from './game.js';
 import { createButton } from './utils/createButton.js';
+import { getResults } from './storage/leaderboard.js';
+import { createLeaderboardTable } from './components/leaderboardTable.js';
 
 const modal = createModal();
+
 
 function showLeaderboard() {
   const title = document.createElement('h2');
   title.textContent = 'Leaderboard';
-
-  const text = document.createElement('p');
-  text.textContent = 'No results yet';
+  const results = getResults();
+  let body;
+  if (results.length === 0) {
+    body = document.createElement('p');
+    body.textContent = 'No results yet';
+  } else {
+    body = createLeaderboardTable(results);
+  }
 
   const closeButton = createButton('Close', modal.close);
 
-  modal.open(title, text, closeButton);
+  modal.open(title, body, closeButton);
 }
 
 function showWinModal(moves) {
