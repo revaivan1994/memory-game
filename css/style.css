@@ -1,6 +1,3 @@
-/* =========================================
-   Sea Memory — styles
-   ========================================= */
 
 :root {
   --ocean-top: #0b2d4a;
@@ -30,7 +27,6 @@ body {
   background-attachment: fixed;
 }
 
-/* Пузырьки: псевдоэлемент на весь экран, без лишней разметки */
 body::before {
   content: '';
   position: fixed;
@@ -56,7 +52,6 @@ body.is-scroll-locked {
   overflow: hidden;
 }
 
-/* ---------- Header ---------- */
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -79,7 +74,6 @@ body.is-scroll-locked {
   color: transparent;
 }
 
-/* ---------- Buttons ---------- */
 .button {
   padding: 10px 20px;
   border: 0;
@@ -109,7 +103,6 @@ body.is-scroll-locked {
   outline-offset: 3px;
 }
 
-/* ---------- Stats ---------- */
 main {
   max-width: 560px;
   margin: 0 auto;
@@ -131,14 +124,12 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Board ---------- */
 .board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
-/* ---------- Card: 3D-переворот ---------- */
 .card {
   aspect-ratio: 1;
   padding: 0;
@@ -146,7 +137,7 @@ main {
   border-radius: var(--radius);
   background: none;
   cursor: pointer;
-  perspective: 700px; /* «глубина» сцены для 3D */
+  perspective: 700px;
 }
 
 .card--open {
@@ -159,7 +150,7 @@ main {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  transform-style: preserve-3d; /* дети живут в 3D */
+  transform-style: preserve-3d;
   transition: transform 0.45s cubic-bezier(0.3, 1.4, 0.6, 1);
 }
 
@@ -173,10 +164,10 @@ main {
   display: grid;
   place-items: center;
   border-radius: inherit;
-  backface-visibility: hidden; /* обратная сторона не видна */
+  backface-visibility: hidden;
 }
 
-/* Рубашка: чешуя из повторяющегося градиента */
+
 .card__face--back {
   background-color: var(--card-back);
   background-image: radial-gradient(circle at 50% 120%, transparent 40%, var(--card-back-line) 41% 48%, transparent 49%);
@@ -191,7 +182,7 @@ main {
 
 .card__face--front {
   background: var(--foam);
-  transform: rotateY(180deg); /* лицо заранее «спиной» к нам */
+  transform: rotateY(180deg);
   box-shadow: 0 6px 14px rgb(0 0 0 / 0.25);
 }
 
@@ -200,7 +191,6 @@ main {
   height: 68%;
 }
 
-/* Найденная пара: золотая рамка и «прыжок» */
 .card--matched .card__face--front {
   box-shadow: inset 0 0 0 4px var(--gold), 0 0 22px rgb(255 203 87 / 0.55);
 }
@@ -215,7 +205,6 @@ main {
   }
 }
 
-/* Несовпавшая пара: красная рамка и тряска */
 .card--wrong .card__face--front {
   box-shadow: inset 0 0 0 4px var(--coral);
 }
@@ -229,7 +218,6 @@ main {
   75% { transform: translateX(6px) rotate(3deg); }
 }
 
-/* ---------- Modal ---------- */
 .modal {
   width: min(400px, calc(100% - 32px));
   padding: 0;
@@ -256,7 +244,6 @@ main {
   backdrop-filter: blur(3px);
 }
 
-/* Кнопки встают в ряд, всё остальное — на всю ширину */
 .modal__content {
   display: flex;
   flex-wrap: wrap;
@@ -283,7 +270,6 @@ main {
   font-size: 1.125rem;
 }
 
-/* ---------- Leaderboard ---------- */
 .leaderboard {
   border-collapse: collapse;
   margin-bottom: 8px;
@@ -310,7 +296,6 @@ main {
   font-weight: 600;
 }
 
-/* ---------- Мобильные ---------- */
 @media (max-width: 420px) {
   .board {
     gap: 8px;
@@ -321,7 +306,6 @@ main {
   }
 }
 
-/* Уважение к настройке «уменьшить движение» */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before {
