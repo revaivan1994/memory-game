@@ -7,6 +7,8 @@ let timerId = null;
 let isLocked = false;
 let moves = 0;
 let pairsFound = 0;
+let isFinished = false;
+let onWin = null;
 
 const TOTAL_PAIRS = CARD_NAMES.length;
 
@@ -23,6 +25,7 @@ export function startGame() {
   isLocked = false;
   moves = 0;
   pairsFound = 0;
+  isFinished = false;
 
   const deck = shuffle([...CARD_NAMES, ...CARD_NAMES]);
   const cards = deck.map((name) => createCard(name, handleCardClick));
@@ -37,7 +40,7 @@ function updateStats() {
 }
 
 function handleCardClick(card) {
-  if (card.classList.contains('card--open') || isLocked) {
+  if (card.classList.contains('card--open') || isLocked || isFinished) {
     return;
   }
   card.classList.add('card--open');
@@ -54,6 +57,10 @@ function handleCardClick(card) {
     previousCard.classList.add('card--matched');
     card.classList.add('card--matched');
     pairsFound += 1;
+    if (pairsFound === TOTAL_PAIRS) {
+      isFinished = true;
+      onWin(moves);
+    }
   } else {
     isLocked = true;
     timerId = setTimeout(() => {
@@ -66,7 +73,8 @@ function handleCardClick(card) {
   updateStats();
 }
 
-export function createGame() {
+export function createGame(onWinCallback) {
+  onWin = onWinCallback;
   const stats = document.createElement('div');
   stats.className = 'stats';
   stats.append(movesText, pairsText);

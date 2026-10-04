@@ -10,17 +10,33 @@ function showLeaderboard() {
   title.textContent = 'Leaderboard';
 
   const text = document.createElement('p');
-  text.textContent = 'No result yet';
+  text.textContent = 'No results yet';
 
   const closeButton = createButton('Close', modal.close);
 
   modal.open(title, text, closeButton);
 }
 
+function showWinModal(moves) {
+  const title = document.createElement('h2');
+  title.textContent = 'You won!';
+
+  const text = document.createElement('p');
+  text.textContent = `Moves: ${moves}`;
+
+  const newGameButton = createButton('New Game', () => {
+    modal.close();
+    startGame();
+  });
+  const closeButton = createButton('Close', modal.close);
+
+  modal.open(title, text, newGameButton, closeButton);
+}
+
 const header = createHeader(
-  () => startGame(),
-  () => showLeaderboard(),
+  startGame,
+  showLeaderboard,
 );
-const game = createGame();
+const game = createGame(showWinModal);
 
 document.body.append(header, game);
